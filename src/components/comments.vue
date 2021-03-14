@@ -1,12 +1,10 @@
 <template>
-  <router-view></router-view>
+  <div>comment</div>
 </template>
 
 <script>
-
-
 export default {
-  name: 'app'
+
 }
 </script>
 
