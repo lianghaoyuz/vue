@@ -53,14 +53,10 @@ data () {
           if(this.ind === 'student')
             right = 2
           else right = 1
-          const response = await this.$http.post(`/login/${right}`, this.ruleForm)
+          const response = await this.$http.post(`/sign/${right}`, this.ruleForm)
           if (response.meta.status === 200) {
-            console.log('注册成功')
-            this.$store.commit('setInfo',response.data.user)
-            this.$message.success(response.meta.msg)
-            window.localStorage.setItem('ac_token', response.data.access_token)
-            window.localStorage.setItem('rf_token', response.data.refresh_token)
-            this.$router.push('/home')
+            this.$message.success('注册成功')
+            this.$router.push('/login')
           } else this.$message.error(response.meta.msg)
         }
       })
