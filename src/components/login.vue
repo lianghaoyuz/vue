@@ -51,6 +51,7 @@ export default {
           const response = await this.$http.post('/login', this.ruleForm)
           if (response.meta.status === 200) {
             console.log('登录成功')
+            this.$store.commit('setInfo',response.data.user)
             this.$message.success(response.meta.msg)
             window.localStorage.setItem('ac_token', response.data.access_token)
             window.localStorage.setItem('rf_token', response.data.refresh_token)

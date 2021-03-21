@@ -30,14 +30,14 @@
                     <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteUser(scope.row.id)"></el-button> 
                      </el-tooltip>   
                     <el-tooltip class="item" effect="dark" content="查看评价" :enterable="false" placement="top-start">
-                     <el-button type="primary" icon="el-icon-search" size="mini" @click="getComments(scope.row.username)"></el-button> 
+                     <el-button type="primary" icon="el-icon-search" size="mini" @click="getComments(scope.row.username,scope.row.id)"></el-button> 
                      </el-tooltip>   
                     </template>
             </el-table-column>
                  </el-table>
   </el-card>
 
-<el-dialog :title=" '姓名：'+ this.active_teacher" :visible.sync="dialogVisible" width="50%">
+<el-dialog :title=" '姓名：'+ this.active_teacher" :visible.sync="dialogVisible" width="50%" >
     满意度：
   <el-progress :percentage="this.score"></el-progress>
   <el-carousel trigger="click" height="150px">
@@ -73,6 +73,7 @@ export default {
       dialogVisible:false,
       userList:[],
       active_teacher:'',
+      active_teacherID:'',
       score:null,
       comments:null
         }
@@ -110,13 +111,14 @@ export default {
             }
             else return this.$message.error("删除失败")
         },
-        async getComments(username){
+        async getComments(username,id){
             this.active_teacher = username
+            this.active_teacherID = id
             this.dialogVisible = true
-            const res = await this.$http.get(`/comments/${username}`)
-            const {score,comments}=JSON.parse(res.data).teacher
-            this.comments = comments
-            this.score = score
+            const res = await this.$http.get(`/comments/${id}`)
+            this.comments = res.data
+            this.score = res.score/5 *100
+            if(this.score == 0) return this.$message.error('暂时无评价')
         }
     },
     created(){
@@ -138,5 +140,8 @@ export default {
 }
 .el-carousel__container{
     margin-top:10px;
+}
+.el-carousel span{
+    margin: auto 0;
 }
 </style>

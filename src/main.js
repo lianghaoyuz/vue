@@ -6,6 +6,11 @@ import axios from 'axios'
 import './element'
 import 'element-ui/lib/theme-chalk/index.css'
 import './assets/gobal/global.css'
+import echarts from 'echarts'
+import infiniteScroll from "vue-infinite-scroll";
+import store from './vuex'
+Vue.use(infiniteScroll);
+Vue.prototype.$echarts = echarts
 Vue.use(VueRouter)
 axios.defaults.baseURL = 'http://localhost:3000'
 axios.interceptors.request.use(config => {
@@ -22,12 +27,10 @@ axios.interceptors.response.use(response => {
 })
 axios.defaults.timeout = 30000
 Vue.prototype.$http = axios
-
-
-
 Vue.config.productionTip = false
 
 new Vue({
     router,
+    store,
     render: h => h(App),
 }).$mount('#app')
