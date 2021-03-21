@@ -8,11 +8,11 @@
       </el-form-item>
       <el-form-item  prop="password" class="in">
         <el-input prefix-icon="iconfont icon-RectangleCopy1" type="password" v-model="ruleForm.password" autocomplete="off" placeholder="密码"></el-input>
-        <span @click="$router.push('/sign')">无账号？点击注册</span>
+        <span @click="$router.push('/login')" id="choice">有账号？点击登录</span>
+        <span id="ind"><input type="radio" id="teacher" name="ind" value="teacher" v-model="ind"><label for="teacher">老师</label><input type="radio" id="student" name="ind" v-model="ind" value="student"><label for="student">学生</label></span>
       </el-form-item>
-      
       <el-form-item class="btns">
-        <el-button type="primary" @click="enter" >登录</el-button>
+        <el-button type="primary" @click="enter" >注册</el-button>
          <el-button type="info" @click="reset">重置</el-button>
       </el-form-item>
     </el-form>
@@ -21,12 +21,10 @@
 </template>
 
 <script>
-// @ is an alias to /src
-
 export default {
-  name: 'Login',
-  data () {
+data () {
     return {
+      ind:'student',
       ruleForm: {
         username: '',
         password: ''
@@ -49,10 +47,15 @@ export default {
     },
     enter () {
       this.$refs.ruleForm.validate(async valid => {
+
         if (valid) {
-          const response = await this.$http.post('/login', this.ruleForm)
+          let right = null
+          if(this.ind === 'student')
+            right = 2
+          else right = 1
+          const response = await this.$http.post(`/login/${right}`, this.ruleForm)
           if (response.meta.status === 200) {
-            console.log('登录成功')
+            console.log('注册成功')
             this.$store.commit('setInfo',response.data.user)
             this.$message.success(response.meta.msg)
             window.localStorage.setItem('ac_token', response.data.access_token)
@@ -65,7 +68,8 @@ export default {
   }
 }
 </script>
-<style  scoped>
+
+<style scoped>
 .login_box{
 background-color: rgb(195, 195, 195);
 height: 100%;
@@ -107,10 +111,19 @@ span{
 }
 .in >>> .el-form-item__content{
   line-height: 15px;
+  position: relative;
 }
-span:hover{
+#choice:hover{
   text-decoration: underline;
   color: rgb(94, 170, 200);
   cursor: pointer;
+}
+span#ind{
+  
+position: absolute;
+right: 30px;
+}
+span#ind[data-v-366a0166]{
+  font-size: 15px;
 }
 </style>
